@@ -1,0 +1,191 @@
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Linking, ScrollView } from 'react-native';
+
+const App = () => {
+  const [screen, setScreen] = useState('Home'); // Controla a tela exibida
+
+  // Componentes das telas
+  const HomeScreen = () => (
+    <View style={styles.screen}>
+      <Text style={styles.title}>BelémVigi</Text>
+      <Text style={styles.subtitle}>
+        O BelémVigi é um aplicativo criado para promover a segurança da cidade de Belém. Aqui, você pode acessar informações sobre áreas de risco, dicas de segurança, contatos de emergência e muito mais.
+      </Text>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Mapa')}>
+        <Text style={styles.buttonText}>Mapa de Segurança</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Dicas')}>
+        <Text style={styles.buttonText}>Dicas</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Contatos')}>
+        <Text style={styles.buttonText}>Contatos de Emergência</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Noticias')}>
+        <Text style={styles.buttonText}>Notícias</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const MapaScreen = () => (
+    <View style={styles.screen}>
+      <Text style={styles.title}>Mapa de Segurança</Text>
+      <Text style={styles.infoText}>Áreas seguras: Verde | Áreas perigosas: Vermelho</Text>
+      
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => Linking.openURL('https://www.google.com/maps/d/u/0/edit?mid=1xBou7_pOEOzoJm4QMLf4eWfoSWYPqxg&usp=sharing')}
+      >
+        <Text style={styles.buttonText}>Abrir Mapa no Google Maps</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Home')}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const DicasScreen = () => (
+    <View style={styles.screen}>
+      <Text style={styles.title}>Dicas de Segurança</Text>
+      <Text style={styles.infoText}>- Evite andar pela cidade tarde da noite.</Text>
+      <Text style={styles.infoText}>- Ande em grupos sempre que possível.</Text>
+      <Text style={styles.infoText}>- Evite mexer no celular ou deixar bens expostos.</Text>
+      <Text style={styles.infoText}>- Evite ruas desertas e mal iluminadas.</Text>
+      <Text style={styles.infoText}>- Não reaja a abordagens violentas</Text>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Home')}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const ContatosScreen = () => (
+    <ScrollView contentContainerStyle={styles.screen}>
+      <Text style={styles.title}>Contatos de Emergência</Text>
+      <Text style={styles.infoText}>Toque em um número para ligar diretamente:</Text>
+      {[
+        { label: 'Corpo de Bombeiros', number: '193' },
+        { label: 'Defesa Civil', number: '199' },
+        { label: 'Polícia Militar', number: '190' },
+        { label: 'SAMU', number: '192' },
+        { label: 'Acidente de Trânsito', number: '194' },
+        { label: 'Aeroporto Internacional', number: '3210-6000' },
+        { label: 'Detran', number: '1514' },
+      ].map((contact, index) => (
+        <TouchableOpacity
+          key={index}
+          style={styles.button}
+          onPress={() => Linking.openURL(`tel:${contact.number}`)}
+        >
+          <Text style={styles.buttonText}>{`${contact.label}: ${contact.number}`}</Text>
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Home')}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+
+  const NoticiasScreen = () => (
+    <View style={styles.screen}>
+      <Text style={styles.title}>Notícias</Text>
+      <Text style={styles.infoText}>
+        Clique no botão abaixo para acessar as últimas notícias sobre criminalidade em Belém do Pará.
+      </Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => Linking.openURL('https://g1.globo.com/busca/?q=criminalidade+bel%C3%A9m+do+par%C3%A1&page=1')}
+      >
+        <Text style={styles.buttonText}>Abrir Notícias G1 Pará</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => Linking.openURL('https://www.oliberal.com/')}
+      >
+        <Text style={styles.buttonText}>Abrir Notícias O liberal</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => Linking.openURL('https://guarda.belem.pa.gov.br/noticias/')}
+      >
+        <Text style={styles.buttonText}>Abrir Notícias Guarda municipal</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => setScreen('Home')}>
+        <Text style={styles.buttonText}>Voltar</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  // Renderização condicional com base na tela selecionada
+  let content;
+  switch (screen) {
+    case 'Mapa':
+      content = <MapaScreen />;
+      break;
+    case 'Dicas':
+      content = <DicasScreen />;
+      break;
+    case 'Contatos':
+      content = <ContatosScreen />;
+      break;
+    case 'Noticias':
+      content = <NoticiasScreen />;
+      break;
+    default:
+      content = <HomeScreen />;
+  }
+
+  return <View style={styles.container}>{content}</View>;
+};
+
+// Estilos básicos
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000', // Fundo preto
+  },
+  screen: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 70, // Título maior
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#fff', // Cor do título em branco
+  },
+  subtitle: {
+    fontSize: 18, // Tamanho do texto explicativo
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#fff', // Cor do texto explicativo em branco
+  },
+  button: {
+    backgroundColor: '#fff', // Cor branca para os botões
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 10,
+    width: '100%',
+  },
+  buttonText: {
+    color: '#000', // Cor do texto do botão em preto
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  infoText: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'center',
+    color: '#fff', // Cor do texto em branco
+  },
+  mapPlaceholder: {
+    width: '90%',
+    height: 200,
+    backgroundColor: '#ccc',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+});
+
+export default App;
